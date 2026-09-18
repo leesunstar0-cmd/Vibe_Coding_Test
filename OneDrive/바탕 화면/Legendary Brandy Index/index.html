@@ -284,7 +284,8 @@
 <main>
   <div class="page-title">
     <h1 class="gold-text">글로벌 브랜디·코냑 시세</h1>
-    <p>2주(격주) 주기 기준 변동 &mdash; 표기가는 추정 참고가이며 실시간 미세 변동은 시뮬레이션입니다.</p>
+    <p>2주(격주) 주기 기준 변동 &mdash; 표기가는 추정 참고가입니다.</p>
+    <p id="updatedAt" style="margin-top:0.4rem;font-size:0.78rem;"></p>
   </div>
 
   <section class="overview" id="overview"></section>
@@ -301,8 +302,12 @@
 
 <script>
   const USD_KRW_RATE = 1390;
+  const API_URL = '/.netlify/functions/prices';
+  const POLL_INTERVAL_MS = 60000;
 
-  const brandyData = [
+  // Fallback seed so the page still renders when opened without the
+  // Netlify Functions API available (e.g. plain file:// or npx serve).
+  let brandyData = [
     { id: 'hennessy-xo', name: 'Hennessy XO', category: 'Cognac', price: 285, twoWeeksAgoPrice: 279, history: [268, 272, 271, 276, 279, 285] },
     { id: 'remy-xo', name: 'Rémy Martin XO', category: 'Cognac', price: 245, twoWeeksAgoPrice: 251, history: [258, 254, 256, 250, 251, 245] },
     { id: 'martell-cordon-bleu', name: 'Martell Cordon Bleu', category: 'Cognac', price: 195, twoWeeksAgoPrice: 189, history: [180, 183, 185, 188, 189, 195] },
@@ -398,26 +403,37 @@
     ticker.innerHTML = build() + build();
   }
 
+  function renderUpdatedAt(iso) {
+    const el = document.getElementById('updatedAt');
+    if (!el) return;
+    if (!iso) { el.textContent = ''; return; }
+    el.style.color = 'var(--text-muted)';
+    el.textContent = '마지막 갱신: ' + new Date(iso).toLocaleString('ko-KR');
+  }
+
   function processData() {
     renderMarketOverview();
     renderCards();
+    initTicker();
   }
 
-  function startLivePriceUpdates() {
-    setInterval(() => {
-      brandyData.forEach((b) => {
-        const jitter = (Math.random() - 0.5) * 0.006;
-        b.price = Math.max(1, b.price * (1 + jitter));
-        b.history[b.history.length - 1] = b.price;
-      });
+  async function fetchLiveData() {
+    try {
+      const res = await fetch(API_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!Array.isArray(data.items) || data.items.length === 0) return;
+      brandyData = data.items;
+      renderUpdatedAt(data.updatedAt);
       processData();
-      initTicker();
-    }, 6000);
+    } catch (err) {
+      // Keep showing the fallback/last-known data; likely running without the API.
+    }
   }
 
   processData();
-  initTicker();
-  startLivePriceUpdates();
+  fetchLiveData();
+  setInterval(fetchLiveData, POLL_INTERVAL_MS);
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     window.addEventListener('load', () => {

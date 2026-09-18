@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Legendary Brandy Index</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --bg: #060606;
+    --card-bg: rgba(20, 18, 15, 0.9);
+    --card-border: rgba(212, 175, 55, 0.22);
+    --gold: #d4af37;
+    --text: #f3efe6;
+    --text-muted: #958c80;
+    --up: #3ecf6e;
+    --down: #ff5c5c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Apple SD Gothic Neo", system-ui, sans-serif;
+    padding: 2rem 1.25rem 4rem;
+  }
+  h1 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  p.sub { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  label { display: block; font-size: 0.85rem; color: var(--gold); margin-bottom: 0.4rem; }
+  input, select {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 0.9rem;
+  }
+  button {
+    background: var(--gold);
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button:hover { opacity: 0.9; }
+  button.secondary { background: transparent; border: 1px solid var(--card-border); color: var(--text); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th, td { text-align: left; padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--card-border); }
+  th { color: var(--text-muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; }
+  td input { margin-bottom: 0; padding: 0.4rem 0.5rem; width: 110px; }
+  .status { margin-top: 1rem; font-size: 0.88rem; min-height: 1.2em; }
+  .status.ok { color: var(--up); }
+  .status.err { color: var(--down); }
+  .row-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Legendary Brandy Index — Admin</h1>
+  <p class="sub">2주 주기 시세 갱신용 관리 페이지. 이 페이지는 검색엔진에 노출되지 않지만, 별도 인증이 없으니 링크를 공유하지 마세요.</p>
+
+  <div class="card">
+    <label for="token">Admin Token</label>
+    <input id="token" type="password" placeholder="Netlify 환경변수 ADMIN_TOKEN 값 입력" autocomplete="off">
+    <button id="loadBtn">불러오기</button>
+    <div class="status" id="loadStatus"></div>
+  </div>
+
+  <div class="card" id="editorCard" style="display:none;">
+    <table>
+      <thead><tr><th>이름</th><th>카테고리</th><th>현재가 (USD)</th><th>새 가격 (USD)</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="row-actions">
+      <button id="saveBtn">가격 일괄 반영</button>
+      <span class="status" id="saveStatus"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:1rem;margin-bottom:1rem;">새 브랜드 추가</h2>
+    <label for="newId">ID (영문, 예: hine-antique)</label>
+    <input id="newId" type="text">
+    <label for="newName">이름</label>
+    <input id="newName" type="text">
+    <label for="newCategory">카테고리</label>
+    <select id="newCategory">
+      <option value="Cognac">Cognac</option>
+      <option value="Brandy">Brandy</option>
+    </select>
+    <label for="newPrice">초기 가격 (USD)</label>
+    <input id="newPrice" type="number" min="0" step="0.01">
+    <button id="addBtn">추가</button>
+    <div class="status" id="addStatus"></div>
+  </div>
+</div>
+
+<script>
+  const API = '/.netlify/functions/prices';
+  const tokenInput = document.getElementById('token');
+  const loadStatus = document.getElementById('loadStatus');
+  const saveStatus = document.getElementById('saveStatus');
+  const addStatus = document.getElementById('addStatus');
+  const editorCard = document.getElementById('editorCard');
+  const rows = document.getElementById('rows');
+
+  let currentItems = [];
+
+  function setStatus(el, msg, ok) {
+    el.textContent = msg;
+    el.className = 'status ' + (ok ? 'ok' : 'err');
+  }
+
+  function renderRows() {
+    rows.innerHTML = currentItems.map((item) => `
+      <tr data-id="${item.id}">
+        <td>${item.name}</td>
+        <td>${item.category}</td>
+        <td>$${item.price.toLocaleString('en-US')}</td>
+        <td><input type="number" min="0" step="0.01" placeholder="변경 없음" data-id="${item.id}"></td>
+      </tr>
+    `).join('');
+  }
+
+  async function loadData() {
+    setStatus(loadStatus, '불러오는 중...', true);
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      currentItems = data.items;
+      renderRows();
+      editorCard.style.display = 'block';
+      setStatus(loadStatus, `불러옴 (마지막 갱신: ${new Date(data.updatedAt).toLocaleString('ko-KR')})`, true);
+    } catch (err) {
+      setStatus(loadStatus, '불러오기 실패: ' + err.message, false);
+    }
+  }
+
+  async function saveUpdates() {
+    const token = tokenInput.value.trim();
+    if (!token) { setStatus(saveStatus, 'Admin Token을 입력하세요.', false); return; }
+
+    const updates = {};
+    rows.querySelectorAll('input[data-id]').forEach((input) => {
+      const val = parseFloat(input.value);
+      if (Number.isFinite(val) && val > 0) updates[input.dataset.id] = val;
+    });
+
+    if (Object.keys(updates).length === 0) {
+      setStatus(saveStatus, '변경된 가격이 없습니다.', false);
+      return;
+    }
+
+    setStatus(saveStatus, '저장 중...', true);
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ updates }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      currentItems = data.items;
+      renderRows();
+      setStatus(saveStatus, '저장 완료.', true);
+    } catch (err) {
+      setStatus(saveStatus, '저장 실패: ' + err.message, false);
+    }
+  }
+
+  async function addItem() {
+    const token = tokenInput.value.trim();
+    if (!token) { setStatus(addStatus, 'Admin Token을 입력하세요.', false); return; }
+
+    const id = document.getElementById('newId').value.trim();
+    const name = document.getElementById('newName').value.trim();
+    const category = document.getElementById('newCategory').value;
+    const price = parseFloat(document.getElementById('newPrice').value);
+
+    if (!id || !name || !Number.isFinite(price) || price <= 0) {
+      setStatus(addStatus, 'ID / 이름 / 가격을 올바르게 입력하세요.', false);
+      return;
+    }
+
+    setStatus(addStatus, '추가 중...', true);
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ add: [{ id, name, category, price }] }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      currentItems = data.items;
+      renderRows();
+      setStatus(addStatus, '추가 완료.', true);
+    } catch (err) {
+      setStatus(addStatus, '추가 실패: ' + err.message, false);
+    }
+  }
+
+  document.getElementById('loadBtn').addEventListener('click', loadData);
+  document.getElementById('saveBtn').addEventListener('click', saveUpdates);
+  document.getElementById('addBtn').addEventListener('click', addItem);
+</script>
+</body>
+</html>

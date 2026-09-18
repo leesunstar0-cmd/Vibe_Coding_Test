@@ -1,15 +1,22 @@
 # Legendary Brandy Index
 
-2주(격주) 주기로 글로벌 브랜디·코냑 시세 변동을 보여주는 **단일 파일 정적 웹앱 + PWA**.
-빌드 도구가 필요 없습니다. `index.html` 하나에 HTML·CSS·JS가 모두 들어 있습니다.
+2주(격주) 주기로 글로벌 브랜디·코냑 시세 변동을 보여주는 **정적 PWA 프런트엔드 + Netlify Functions 백엔드**.
+프런트엔드는 빌드 도구 없이 `index.html` 하나로 동작하며, 시세 데이터는 Netlify Functions API에서 가져옵니다
+(API가 없으면 하드코딩된 폴백 데이터로 동작).
 
 ```
 Legendary Brandy Index/
-├─ index.html              # 앱 전체 (마크업 + 스타일 + 로직)
+├─ index.html              # 앱 전체 (마크업 + 스타일 + 로직, API에서 시세 fetch)
+├─ admin.html              # 관리자용 시세 갱신 페이지 (2주 주기 입력)
+├─ contact.html            # 제휴 문의 폼 (Formspree 연동)
+├─ landing.html            # 소개 페이지
+├─ netlify/functions/
+│  └─ prices.js            # 시세 조회(GET)·갱신(POST, 관리자 인증) API
+├─ netlify.toml            # Netlify 빌드/함수 설정
 ├─ manifest.webmanifest    # PWA 설치 정보
 ├─ sw.js                   # 서비스워커 (오프라인 캐시)
 ├─ icons/                  # 앱 아이콘 (192 / 512 / maskable)
-├─ package.json            # 로컬 서버·배포 스크립트
+├─ package.json            # 로컬 서버·배포 스크립트, 백엔드 의존성
 └─ README.md
 ```
 
@@ -116,36 +123,67 @@ app.whenReady().then(() => {
 
 ---
 
-## 5. "실시간" 시세를 진짜 데이터로 바꾸기
+## 5. 백엔드 (Netlify Functions + Blobs)
 
-현재 `index.html` 안의 흐름:
+시세 데이터는 더 이상 하드코딩/시뮬레이션이 아니라, `netlify/functions/prices.js` 가 제공하는
+API에서 가져옵니다. 저장소는 [Netlify Blobs](https://docs.netlify.com/blobs/overview/)를 사용하므로
+별도 DB 계정 없이 Netlify에 배포하면 바로 동작합니다.
 
-- `brandyData` 배열 = 하드코딩된 2026-09-02 기준 추정가 (`price`, `twoWeeksAgoPrice`, `history`)
-- `startLivePriceUpdates()` = 6초마다 가격을 무작위로 흔드는 **시뮬레이션**
+### 5.1 API
 
-실데이터로 교체하려면:
+| Method | Path | 설명 |
+|---|---|---|
+| `GET` | `/.netlify/functions/prices` | 전체 시세 목록 + 마지막 갱신 시각 조회 (인증 불필요) |
+| `POST` | `/.netlify/functions/prices` | 시세 갱신/브랜드 추가·삭제 (관리자 토큰 필요) |
 
-1. 가격 소스를 정한다 (자체 스프레드시트 CSV, 사내 API, wine-searcher 등 스크래핑 백엔드).
-2. `startLivePriceUpdates()` 를 폴링 함수로 교체:
+`GET` 응답 예시:
 
-```js
-async function refreshPrices() {
-  const res = await fetch('https://your-api.example.com/brandy-prices');
-  const rows = await res.json(); // [{ id, price, twoWeeksAgoPrice, history }, ...]
-  rows.forEach(r => {
-    const item = brandyData.find(b => b.id === r.id);
-    if (!item) return;
-    Object.assign(item, r);
-  });
-  processData(); initTicker(); renderMarketOverview();
+```json
+{
+  "updatedAt": "2026-09-18T09:00:00.000Z",
+  "items": [
+    { "id": "hennessy-xo", "name": "Hennessy XO", "category": "Cognac", "price": 285, "twoWeeksAgoPrice": 279, "history": [268,272,271,276,279,285] }
+  ]
 }
-setInterval(refreshPrices, 10 * 60 * 1000); // 10분마다
-refreshPrices();
 ```
 
-3. 브라우저 CORS 때문에 외부 사이트 직접 호출은 대개 막힙니다 → 작은 프록시/크론 백엔드
-   (Cloudflare Workers, Vercel Cron, Google Apps Script)에서 하루 1~2회 수집해 JSON으로 서빙하세요.
-4. `sw.js` 의 `CACHE` 버전을 올려 배포 시 캐시를 갱신합니다.
+`POST` 요청은 `Authorization: Bearer <ADMIN_TOKEN>` 헤더가 필요하며, 바디는 다음을 조합할 수 있습니다.
+
+```json
+{
+  "updates": { "hennessy-xo": 292 },
+  "add": [{ "id": "hine-antique", "name": "Hine Antique", "category": "Cognac", "price": 210 }],
+  "remove": ["torres-10"]
+}
+```
+
+- `updates`: 해당 id의 현재 `price`를 `twoWeeksAgoPrice`로 밀어내고, 새 가격을 `history`에 누적 반영합니다(2주 주기 갱신).
+- `add`: 새 브랜드를 추가합니다.
+- `remove`: id로 브랜드를 제거합니다.
+
+### 5.2 관리자 페이지
+
+`admin.html`에서 Admin Token을 입력하면 현재 시세 목록을 불러와 가격을 일괄 수정하거나 새 브랜드를 추가할 수 있습니다.
+검색엔진에는 노출되지 않지만(`noindex`) 별도 로그인 화면은 없으므로 URL과 토큰을 외부에 공유하지 마세요.
+
+### 5.3 배포 & 환경변수 설정 (Netlify)
+
+1. Netlify에 이 저장소를 연결해 배포합니다 (`netlify.toml`이 함수 경로를 자동 인식).
+2. Netlify 대시보드 → Site configuration → Environment variables 에서 `ADMIN_TOKEN` 값을 설정합니다
+   (예: 임의의 긴 랜덤 문자열). 이 토큰이 없으면 `POST` 요청은 항상 401을 반환합니다.
+3. 최초 배포 후 `GET /.netlify/functions/prices` 호출 시 자동으로 시드 데이터가 채워집니다.
+
+### 5.4 로컬 개발
+
+```bash
+npm install
+npx netlify dev
+```
+
+`netlify dev`는 정적 파일과 `netlify/functions`를 함께 로컬에서 서빙합니다. `ADMIN_TOKEN`은
+`.env` 파일에 넣어 사용하세요 (`.gitignore`에 포함되어 커밋되지 않습니다).
+
+> Functions 없이 `npx serve .` 로만 열면 `index.html`은 API 호출이 실패해 하드코딩된 폴백 데이터로 표시됩니다.
 
 ---
 
