@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legendary Brandy Index</title>
+<meta name="description" content="2주 주기로 글로벌 브랜디·코냑 시세 변동을 추적하는 Legendary Brandy Index를 소개합니다.">
+<style>
+  :root {
+    --bg: #0e0b08;
+    --bg-alt: #16110c;
+    --gold: #d4af6a;
+    --gold-bright: #f0cf8a;
+    --text: #f3ecdf;
+    --text-muted: #b8ac96;
+    --border: #2c2418;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, sans-serif;
+    line-height: 1.65;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: 1.05rem;
+  }
+
+  .brand .gold { color: var(--gold); }
+
+  nav a.cta {
+    border: 1px solid var(--gold);
+    color: var(--gold-bright);
+    padding: 0.5rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  nav a.cta:hover { background: var(--gold); color: #1a1206; }
+
+  .hero {
+    text-align: center;
+    padding: 7rem 1.5rem 6rem;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--gold) 12%, transparent), transparent);
+  }
+
+  .hero-eyebrow {
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.2rem;
+  }
+
+  .hero h1 .gold { color: var(--gold-bright); }
+
+  .hero p.lead {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    max-width: 560px;
+    margin: 0 auto 2.2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 1.9rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border: 2px solid transparent;
+  }
+
+  .btn:hover { transform: translateY(-2px); }
+
+  .btn-primary { background: var(--gold); color: #1a1206; }
+  .btn-primary:hover { opacity: 0.9; }
+
+  .btn-outline { border-color: var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold-bright); }
+
+  section { padding: 5rem 0; }
+
+  .section-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-title .gold { color: var(--gold); }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.8rem;
+  }
+
+  .feature-icon { font-size: 1.8rem; margin-bottom: 0.9rem; }
+
+  .feature-card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+
+  .feature-card p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
+
+  .about {
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about .wrap { text-align: center; }
+
+  .about p {
+    max-width: 640px;
+    margin: 0 auto 1.2rem;
+    color: var(--text-muted);
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat strong {
+    display: block;
+    font-size: 1.8rem;
+    color: var(--gold-bright);
+    font-weight: 800;
+  }
+
+  .stat span { color: var(--text-muted); font-size: 0.85rem; }
+
+  .cta-section { text-align: center; }
+
+  .cta-section p { color: var(--text-muted); margin-bottom: 2rem; }
+
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+  }
+
+  footer a { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <span class="brand"><span class="gold">Legendary</span> Brandy Index</span>
+    <a href="index.html" class="cta">시세 보기</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-eyebrow">Global Brandy &amp; Cognac Price Tracker</p>
+      <h1>2주마다 갱신되는<br><span class="gold">브랜디·코냑 시세</span>를 한눈에</h1>
+      <p class="lead">
+        전 세계 브랜디·코냑 시세 흐름을 격주 주기로 추적하는 단일 파일 정적 웹앱.
+        설치 없이 브라우저에서 바로, 오프라인에서도 확인하세요.
+      </p>
+      <div class="hero-actions">
+        <a href="index.html" class="btn btn-primary">지금 시세 보기</a>
+        <a href="#about" class="btn btn-outline">더 알아보기</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <div class="wrap">
+      <h2 class="section-title">왜 <span class="gold">Legendary</span> 인가</h2>
+      <p>
+        빌드 도구도, 회원가입도 필요 없습니다. 링크 하나로 열어서 바로 확인하고,
+        휴대폰 홈 화면에 추가하면 네이티브 앱처럼 오프라인에서도 동작합니다.
+      </p>
+      <div class="stats">
+        <div class="stat"><strong>2주</strong><span>갱신 주기</span></div>
+        <div class="stat"><strong>PWA</strong><span>오프라인 지원</span></div>
+        <div class="stat"><strong>0</strong><span>설치 필요 없음</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">핵심 <span class="gold">기능</span></h2>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>격주 시세 트래킹</h3>
+          <p>2주 전 대비 가격 변동을 즉시 비교하며 시장 흐름을 파악합니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>PWA 설치</h3>
+          <p>홈 화면에 추가하면 주소창 없는 전체화면 앱처럼 실행됩니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>빌드 도구 불필요</h3>
+          <p>HTML 파일 하나로 동작 — 서버나 프레임워크 설정이 필요 없습니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>오프라인 지원</h3>
+          <p>서비스워커 캐시로 인터넷이 끊겨도 마지막 데이터를 확인할 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="wrap">
+      <h2 class="section-title">지금 바로 <span class="gold">시작하세요</span></h2>
+      <p>설치도, 가입도 없이 30초 안에 시세를 확인할 수 있습니다.</p>
+      <a href="index.html" class="btn btn-primary">Legendary Brandy Index 열기</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; <span id="year"></span> Legendary Brandy Index &mdash; 표기 시세는 참고용이며 투자 권유가 아닙니다.</p>
+  <p><a href="contact.html">비즈니스 제휴 문의</a></p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

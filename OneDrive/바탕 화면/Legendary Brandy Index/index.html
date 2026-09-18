@@ -1,190 +1,429 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>제휴 및 비즈니스 문의</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legendary Brandy Index — 글로벌 브랜디·코냑 시세</title>
+<meta name="description" content="2주 주기로 글로벌 브랜디·코냑 시세 변동을 보여주는 트래커.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#060606">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890123456"
-         crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #060606;
+    --bg-alt: #0f0d0a;
+    --card-bg: rgba(20, 18, 15, 0.85);
+    --card-border: rgba(212, 175, 55, 0.22);
+    --gold: #d4af37;
+    --gold-bright: #f0d98a;
+    --gold-grad: linear-gradient(135deg, #f9f0d0 0%, #d4af37 50%, #8a6513 100%);
+    --text: #f3efe6;
+    --text-muted: #958c80;
+    --up: #3ecf6e;
+    --down: #ff5c5c;
+  }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <style>
-        :root {
-            --bg-color: #080808;
-            --card-bg: rgba(20, 18, 15, 0.85);
-            --card-border: rgba(212, 175, 55, 0.25);
-            --accent-gold: #d4af37;
-            --accent-gold-grad: linear-gradient(135deg, #f9f0d0 0%, #d4af37 50%, #8a6513 100%);
-            --text-main: #f3efe6;
-            --text-muted: #958c80;
-            --font-heading: 'Cinzel', serif;
-            --font-body: 'Noto Serif KR', serif;
-        }
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 55%);
+    color: var(--text);
+    font-family: "Noto Serif KR", "Apple SD Gothic Neo", serif, system-ui;
+    min-height: 100vh;
+  }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  a { color: inherit; }
 
-        body {
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 10%, rgba(212, 175, 55, 0.12) 0%, transparent 60%);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
+  .gold-text {
+    background: var(--gold-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-        .gold-text {
-            background: var(--accent-gold-grad);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(6, 6, 6, 0.88);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--card-border);
+  }
 
-        .partnership-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            width: 100%;
-            max-width: 580px;
-            padding: 40px 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.1);
-            backdrop-filter: blur(10px);
-            margin: 20px 0;
-        }
+  .top-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
 
-        .header-area { text-align: center; margin-bottom: 30px; }
-        .header-area h1 { font-family: var(--font-heading); font-size: 2rem; letter-spacing: 2px; margin-bottom: 8px; }
-        .header-area p { color: var(--text-muted); font-size: 0.95rem; font-weight: 300; }
+  .brand {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
 
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 0.88rem; color: var(--accent-gold); margin-bottom: 6px; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 12px 16px; background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--card-border); color: var(--text-main);
-            border-radius: 8px; outline: none; font-size: 0.95rem; font-family: var(--font-body);
-            transition: all 0.3s ease;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--accent-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-        }
+  .top-links {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    font-size: 0.85rem;
+  }
 
-        .submit-btn {
-            width: 100%; padding: 14px; background: var(--accent-gold-grad); color: #000;
-            border: none; font-weight: 700; font-family: var(--font-heading); font-size: 1rem;
-            letter-spacing: 1px; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: opacity 0.3s;
-        }
-        .submit-btn:hover { opacity: 0.9; }
-        .submit-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+  .top-links a.contact-link {
+    color: var(--text-muted);
+  }
 
-        .form-status { margin-top: 15px; font-size: 0.9rem; text-align: center; min-height: 24px; }
+  .top-links a.contact-link:hover { color: var(--gold-bright); }
 
-        .adsense-container {
-            width: 100%; max-width: 580px; margin: 15px 0; text-align: center; overflow: hidden;
-            border-radius: 12px; background: rgba(15, 13, 10, 0.5); border: 1px dashed rgba(212, 175, 55, 0.15); padding: 10px;
-        }
-        .adsense-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; display: block; letter-spacing: 1px; }
+  /* Ticker */
+  .ticker-wrap {
+    overflow: hidden;
+    border-bottom: 1px solid var(--card-border);
+    background: var(--bg-alt);
+    white-space: nowrap;
+  }
 
-        @media (max-width: 480px) {
-            .partnership-card { padding: 30px 20px; }
-            .header-area h1 { font-size: 1.6rem; }
-        }
-    </style>
+  .ticker {
+    display: inline-flex;
+    gap: 2.5rem;
+    padding: 0.6rem 0;
+    animation: scroll-ticker 32s linear infinite;
+  }
+
+  .ticker span.item {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .ticker span.item strong { color: var(--text); margin-right: 0.4rem; }
+
+  .ticker .up { color: var(--up); }
+  .ticker .down { color: var(--down); }
+
+  @keyframes scroll-ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title h1 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  /* Market overview */
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .overview .stat {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    text-align: center;
+  }
+
+  .overview .stat .label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .overview .stat .value {
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .overview .stat .value.up { color: var(--up); }
+  .overview .stat .value.down { color: var(--down); }
+
+  /* Price grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1.4rem;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s ease;
+  }
+
+  .card .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.3rem;
+  }
+
+  .card .name { font-weight: 700; font-size: 1.05rem; }
+
+  .card .category {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.9rem;
+  }
+
+  .card .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .card .price-usd {
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+
+  .card .price-krw {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .card .change {
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .card .change.up { color: var(--up); }
+  .card .change.down { color: var(--down); }
+
+  .card .change-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 0.3rem;
+  }
+
+  .sparkline {
+    margin-top: 1rem;
+    height: 36px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+  }
+
+  .sparkline .bar {
+    flex: 1;
+    background: var(--gold);
+    opacity: 0.35;
+    border-radius: 2px 2px 0 0;
+    min-height: 3px;
+    transition: height 0.4s ease;
+  }
+
+  .sparkline .bar:last-child { opacity: 0.9; }
+
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  footer a { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .top-inner { flex-wrap: wrap; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="partnership-card">
-        <div class="header-area">
-            <h1 class="gold-text">Partnership Inquiry</h1>
-            <p>제휴 및 비즈니스 협력 문의를 남겨주시면 빠르게 연락드리겠습니다.</p>
-        </div>
+<header class="top">
+  <div class="top-inner">
+    <span class="brand gold-text">Legendary Brandy Index</span>
+    <nav class="top-links">
+      <a href="landing.html">소개</a>
+      <a href="contact.html" class="contact-link">문의하기</a>
+    </nav>
+  </div>
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker"></div>
+  </div>
+</header>
 
-        <form id="partnershipForm" action="https://formspree.io/f/xqpkbdae" method="POST">
-            <input type="hidden" name="_subject" value="[신규 제휴 문의] 새로운 비즈니스 제안이 접수되었습니다.">
+<main>
+  <div class="page-title">
+    <h1 class="gold-text">글로벌 브랜디·코냑 시세</h1>
+    <p>2주(격주) 주기 기준 변동 &mdash; 표기가는 추정 참고가이며 실시간 미세 변동은 시뮬레이션입니다.</p>
+  </div>
 
-            <div class="form-group">
-                <label for="companyName"><i class="fa-solid fa-building" style="margin-right: 6px;"></i> 회사 / 담당자명</label>
-                <input type="text" id="companyName" name="company_or_name" required placeholder="예: (주)브랜드 / 홍길동">
-            </div>
+  <section class="overview" id="overview"></section>
 
-            <div class="form-group">
-                <label for="userEmail"><i class="fa-solid fa-envelope" style="margin-right: 6px;"></i> 이메일 주소</label>
-                <input type="email" id="userEmail" name="email" required placeholder="contact@company.com">
-            </div>
+  <section class="grid" id="grid"></section>
+</main>
 
-            <div class="form-group">
-                <label for="userPhone"><i class="fa-solid fa-phone" style="margin-right: 6px;"></i> 연락처 (선택)</label>
-                <input type="tel" id="userPhone" name="phone" placeholder="010-1234-5678">
-            </div>
+<footer>
+  <p>
+    표기 시세는 글로벌 리테일·옥션·2차 거래 공개 자료를 종합한 추정 참고가이며 투자·매매 권유가 아닙니다.<br>
+    환율 1 USD = 1,390 KRW 고정 적용 · 비즈니스 제휴 문의는 <a href="contact.html">여기</a>로 남겨주세요.
+  </p>
+</footer>
 
-            <div class="form-group">
-                <label for="inquiryType"><i class="fa-solid fa-handshake" style="margin-right: 6px;"></i> 제휴 유형</label>
-                <select id="inquiryType" name="inquiry_type" required>
-                    <option value="" disabled selected>유형을 선택해 주세요</option>
-                    <option value="마케팅/프로모션">마케팅 / 프로모션 제휴</option>
-                    <option value="입점/유통">입점 / 유통 문의</option>
-                    <option value="콘텐츠/컬래버레이션">콘텐츠 / 컬래버레이션</option>
-                    <option value="기타 문의">기타 비즈니스 문의</option>
-                </select>
-            </div>
+<script>
+  const USD_KRW_RATE = 1390;
 
-            <div class="form-group">
-                <label for="userMessage"><i class="fa-solid fa-pen" style="margin-right: 6px;"></i> 제휴 제안 내용</label>
-                <textarea id="userMessage" name="message" rows="5" required placeholder="제안하고자 하는 내용을 상세히 작성해 주세요."></textarea>
-            </div>
+  const brandyData = [
+    { id: 'hennessy-xo', name: 'Hennessy XO', category: 'Cognac', price: 285, twoWeeksAgoPrice: 279, history: [268, 272, 271, 276, 279, 285] },
+    { id: 'remy-xo', name: 'Rémy Martin XO', category: 'Cognac', price: 245, twoWeeksAgoPrice: 251, history: [258, 254, 256, 250, 251, 245] },
+    { id: 'martell-cordon-bleu', name: 'Martell Cordon Bleu', category: 'Cognac', price: 195, twoWeeksAgoPrice: 189, history: [180, 183, 185, 188, 189, 195] },
+    { id: 'courvoisier-xo', name: 'Courvoisier XO', category: 'Cognac', price: 210, twoWeeksAgoPrice: 214, history: [220, 218, 216, 213, 214, 210] },
+    { id: 'camus-xo', name: 'Camus XO', category: 'Cognac', price: 175, twoWeeksAgoPrice: 168, history: [160, 162, 165, 166, 168, 175] },
+    { id: 'louis-xiii', name: 'Louis XIII', category: 'Cognac', price: 3850, twoWeeksAgoPrice: 3790, history: [3700, 3720, 3760, 3780, 3790, 3850] },
+    { id: 'hennessy-paradis', name: 'Hennessy Paradis', category: 'Cognac', price: 780, twoWeeksAgoPrice: 805, history: [830, 820, 812, 808, 805, 780] },
+    { id: 'remy-1738', name: 'Rémy Martin 1738', category: 'Cognac', price: 68, twoWeeksAgoPrice: 65, history: [61, 62, 63, 64, 65, 68] },
+    { id: 'dusse-vsop', name: "D'USSE VSOP", category: 'Cognac', price: 45, twoWeeksAgoPrice: 46, history: [48, 47, 47, 46, 46, 45] },
+    { id: 'pierre-ferrand-1840', name: 'Pierre Ferrand 1840', category: 'Brandy', price: 38, twoWeeksAgoPrice: 36, history: [34, 34, 35, 35, 36, 38] },
+    { id: 'asbach-uralt', name: 'Asbach Uralt', category: 'Brandy', price: 28, twoWeeksAgoPrice: 29, history: [30, 30, 29, 29, 29, 28] },
+    { id: 'torres-10', name: 'Torres 10', category: 'Brandy', price: 24, twoWeeksAgoPrice: 23, history: [21, 22, 22, 23, 23, 24] },
+  ];
 
-            <button type="submit" class="submit-btn" id="submitBtn">문의 보내기</button>
-            <div id="formStatus" class="form-status"></div>
-        </form>
-    </div>
+  function pctChange(current, prev) {
+    return ((current - prev) / prev) * 100;
+  }
 
-    <script>
-        const form = document.getElementById('partnershipForm');
-        const formStatus = document.getElementById('formStatus');
-        const submitBtn = document.getElementById('submitBtn');
+  function fmtUsd(n) {
+    return '$' + n.toLocaleString('en-US', { maximumFractionDigits: n < 100 ? 2 : 0 });
+  }
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerText = '전송 중...';
-            formStatus.innerText = '';
+  function fmtKrw(n) {
+    return '₩' + Math.round(n * USD_KRW_RATE).toLocaleString('ko-KR');
+  }
 
-            const data = new FormData(form);
+  function renderMarketOverview() {
+    const overview = document.getElementById('overview');
+    const changes = brandyData.map((b) => pctChange(b.price, b.twoWeeksAgoPrice));
+    const avgChange = changes.reduce((a, c) => a + c, 0) / changes.length;
+    const upCount = changes.filter((c) => c > 0).length;
+    const downCount = changes.filter((c) => c < 0).length;
 
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: data,
-                    headers: { 'Accept': 'application/json' }
-                });
+    overview.innerHTML = `
+      <div class="stat">
+        <div class="label">추적 품목</div>
+        <div class="value">${brandyData.length}</div>
+      </div>
+      <div class="stat">
+        <div class="label">평균 변동률</div>
+        <div class="value ${avgChange >= 0 ? 'up' : 'down'}">${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%</div>
+      </div>
+      <div class="stat">
+        <div class="label">상승</div>
+        <div class="value up">${upCount}</div>
+      </div>
+      <div class="stat">
+        <div class="label">하락</div>
+        <div class="value down">${downCount}</div>
+      </div>
+    `;
+  }
 
-                if (response.ok) {
-                    formStatus.style.color = '#22c55e';
-                    formStatus.innerText = '✓ 성공적으로 접수되었습니다. 빠른 시일 내에 답변드리겠습니다!';
-                    form.reset();
-                } else {
-                    const result = await response.json();
-                    formStatus.style.color = '#ff4d4d';
-                    if (Object.hasOwn(result, 'errors')) {
-                        formStatus.innerText = result["errors"].map(error => error["message"]).join(", ");
-                    } else {
-                        formStatus.innerText = '✕ 전송 중 오류가 발생했습니다. 다시 시도해 주세요.';
-                    }
-                }
-            } catch (error) {
-                formStatus.style.color = '#ff4d4d';
-                formStatus.innerText = '✕ 네트워크 오류가 발생했습니다.';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = '문의 보내기';
-            }
-        });
-    </script>
+  function renderCards() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = brandyData.map((b) => {
+      const change = pctChange(b.price, b.twoWeeksAgoPrice);
+      const dir = change >= 0 ? 'up' : 'down';
+      const arrow = change >= 0 ? '▲' : '▼';
+      const maxHist = Math.max(...b.history);
+      const minHist = Math.min(...b.history);
+      const range = maxHist - minHist || 1;
+      const bars = b.history.map((h) => {
+        const heightPct = 15 + ((h - minHist) / range) * 85;
+        return `<div class="bar" style="height:${heightPct}%"></div>`;
+      }).join('');
+
+      return `
+        <article class="card" data-id="${b.id}">
+          <div class="card-top">
+            <span class="name">${b.name}</span>
+          </div>
+          <div class="category">${b.category}</div>
+          <div class="price-row">
+            <span class="price-usd">${fmtUsd(b.price)}</span>
+            <span class="price-krw">${fmtKrw(b.price)}</span>
+          </div>
+          <span class="change ${dir}">${arrow} ${Math.abs(change).toFixed(2)}%<span class="change-label">2주 대비</span></span>
+          <div class="sparkline">${bars}</div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  function initTicker() {
+    const ticker = document.getElementById('ticker');
+    const build = () => brandyData.map((b) => {
+      const change = pctChange(b.price, b.twoWeeksAgoPrice);
+      const dir = change >= 0 ? 'up' : 'down';
+      const arrow = change >= 0 ? '▲' : '▼';
+      return `<span class="item"><strong>${b.name}</strong>${fmtUsd(b.price)} <span class="${dir}">${arrow} ${Math.abs(change).toFixed(2)}%</span></span>`;
+    }).join('');
+    ticker.innerHTML = build() + build();
+  }
+
+  function processData() {
+    renderMarketOverview();
+    renderCards();
+  }
+
+  function startLivePriceUpdates() {
+    setInterval(() => {
+      brandyData.forEach((b) => {
+        const jitter = (Math.random() - 0.5) * 0.006;
+        b.price = Math.max(1, b.price * (1 + jitter));
+        b.history[b.history.length - 1] = b.price;
+      });
+      processData();
+      initTicker();
+    }, 6000);
+  }
+
+  processData();
+  initTicker();
+  startLivePriceUpdates();
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
 </body>
 </html>

@@ -1,10 +1,12 @@
 /* Legendary Brandy Index - Service Worker
  * 정적 자산을 캐시해 오프라인에서도 앱이 실행되도록 함.
  * index.html을 수정할 때마다 CACHE 버전을 올리세요. */
-const CACHE = 'brandy-index-v1';
+const CACHE = 'brandy-index-v2';
 const ASSETS = [
   './',
   './index.html',
+  './landing.html',
+  './contact.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png'
