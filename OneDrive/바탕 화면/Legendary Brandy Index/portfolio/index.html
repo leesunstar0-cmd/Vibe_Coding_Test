@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>홍길동 | Portfolio</title>
+<meta name="description" content="홍길동의 개인 포트폴리오 사이트입니다.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="#home" class="logo">홍길동</a>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">홈</a></li>
+      <li><a href="#about">소개</a></li>
+      <li><a href="#skills">기술</a></li>
+      <li><a href="#projects">프로젝트</a></li>
+      <li><a href="#contact">연락처</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="다크모드 전환">🌙</button>
+  </nav>
+</header>
+
+<main>
+  <section id="home" class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">안녕하세요, 저는</p>
+      <h1 class="hero-title">홍길동<span class="accent">입니다.</span></h1>
+      <p class="hero-subtitle">웹 서비스를 만드는 개발자 &mdash; 아이디어를 코드로, 코드를 경험으로.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">프로젝트 보기</a>
+        <a href="#contact" class="btn btn-outline">연락하기</a>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="아래로 스크롤">↓</a>
+  </section>
+
+  <section id="about" class="section">
+    <h2 class="section-title"><span class="section-num">01</span> 소개</h2>
+    <div class="about-grid">
+      <div class="about-photo" aria-hidden="true">👤</div>
+      <div class="about-text">
+        <p>
+          저는 사용자 중심의 웹 경험을 만드는 것을 좋아하는 개발자입니다.
+          새로운 기술을 배우는 것을 즐기며, 깔끔하고 유지보수하기 쉬운 코드를 지향합니다.
+        </p>
+        <p>
+          이 문단들을 자신의 이야기로 바꿔보세요 &mdash; 경력, 관심 분야, 지향하는 가치 등을
+          자유롭게 적으시면 됩니다.
+        </p>
+        <ul class="about-facts">
+          <li><strong>위치</strong><span>대한민국</span></li>
+          <li><strong>이메일</strong><span>you@example.com</span></li>
+          <li><strong>관심 분야</strong><span>프론트엔드, UI/UX</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="section section-alt">
+    <h2 class="section-title"><span class="section-num">02</span> 기술 스택</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3>Frontend</h3>
+        <p>HTML, CSS, JavaScript, React</p>
+      </div>
+      <div class="skill-card">
+        <h3>Backend</h3>
+        <p>Node.js, Python, REST API</p>
+      </div>
+      <div class="skill-card">
+        <h3>Tools</h3>
+        <p>Git, Figma, VS Code</p>
+      </div>
+      <div class="skill-card">
+        <h3>Database</h3>
+        <p>MySQL, MongoDB</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <h2 class="section-title"><span class="section-num">03</span> 프로젝트</h2>
+    <div class="projects-grid">
+      <article class="project-card">
+        <div class="project-thumb">🗂️</div>
+        <div class="project-body">
+          <h3>프로젝트 이름 1</h3>
+          <p>이 프로젝트에 대한 간단한 설명을 적어주세요. 어떤 문제를 해결했는지, 어떤 기술을 사용했는지 소개하세요.</p>
+          <div class="project-tags"><span>React</span><span>Node.js</span></div>
+          <a href="#" class="project-link">자세히 보기 →</a>
+        </div>
+      </article>
+      <article class="project-card">
+        <div class="project-thumb">📱</div>
+        <div class="project-body">
+          <h3>프로젝트 이름 2</h3>
+          <p>이 프로젝트에 대한 간단한 설명을 적어주세요. 어떤 문제를 해결했는지, 어떤 기술을 사용했는지 소개하세요.</p>
+          <div class="project-tags"><span>JavaScript</span><span>API</span></div>
+          <a href="#" class="project-link">자세히 보기 →</a>
+        </div>
+      </article>
+      <article class="project-card">
+        <div class="project-thumb">🎨</div>
+        <div class="project-body">
+          <h3>프로젝트 이름 3</h3>
+          <p>이 프로젝트에 대한 간단한 설명을 적어주세요. 어떤 문제를 해결했는지, 어떤 기술을 사용했는지 소개하세요.</p>
+          <div class="project-tags"><span>Figma</span><span>CSS</span></div>
+          <a href="#" class="project-link">자세히 보기 →</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact" class="section section-alt">
+    <h2 class="section-title"><span class="section-num">04</span> 연락처</h2>
+    <div class="contact-wrap">
+      <p class="contact-lead">새로운 프로젝트나 협업 제안이 있으시면 언제든 연락 주세요.</p>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <label for="name">이름</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-row">
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-row">
+          <label for="message">메시지</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">보내기</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+      <div class="contact-links">
+        <a href="mailto:you@example.com">✉ you@example.com</a>
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>&copy; <span id="year"></span> 홍길동. All rights reserved.</p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

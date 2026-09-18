@@ -1,0 +1,13 @@
+{
+  "name": "legendary-brandy-index",
+  "version": "1.0.0",
+  "description": "2주 주기 글로벌 브랜디·코냑 시세 변동 트래커 (PWA)",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . -l 5173",
+    "deploy:surge": "npx surge . brandy-index.surge.sh"
+  },
+  "keywords": ["brandy", "cognac", "price-index", "pwa"],
+  "license": "MIT"
+}
